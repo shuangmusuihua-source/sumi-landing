@@ -20,10 +20,33 @@ const repositoryUrl = 'https://github.com/shuangmusuihua-source/vision-agent'
 const workflow = [
   { number: '01', title: '事务工作区', copy: '把同一件事的背景、资料和长期进展放在一起。' },
   { number: '02', title: '任务会话', copy: '为一个具体目标开启会话，不让上下文混进别的工作。' },
-  { number: '03', title: '协作研究', copy: '上传文件、联网查找，与 Agent 一起分析和判断。' },
+  { number: '03', title: '协作研究', copy: '上传文件、联网研究，与 Agent 一起分析、判断和推进。' },
   { number: '04', title: 'Markdown 精修', copy: '让结论进入可预览、可编辑、可比较的工作底稿。' },
   { number: '05', title: 'Skill 交付', copy: '从同一份定稿生成 Slides、DOCX、XLSX、PDF 或 HTML。' },
   { number: '06', title: '知识沉淀', copy: '把值得保留的文档同步到知识库，服务下一项任务。' },
+]
+
+const capabilities = [
+  {
+    number: '01',
+    title: '模型供应商自己选',
+    copy: 'Sumi 不绑定单一大模型。使用你自己的账户和配置，按任务选择合适的模型供应商。',
+  },
+  {
+    number: '02',
+    title: '重复任务交给自动化',
+    copy: '把固定流程配置为自动化，减少重复输入和手动发起。',
+  },
+  {
+    number: '03',
+    title: '临时问题直接 Ask sumi',
+    copy: '通用问答、工具调用和快速处理，不必先创建完整任务。',
+  },
+  {
+    number: '04',
+    title: '定稿之后再做交付',
+    copy: '调用 Skill，把同一份 Markdown 生成 Slides、DOCX、XLSX、PDF 或 HTML。',
+  },
 ]
 
 const editSteps = [
@@ -65,7 +88,8 @@ function Header() {
         <Brand />
         <nav id="primary-navigation" className={open ? 'nav is-open' : 'nav'} aria-label="主要导航">
           <a href="#workflow" onClick={() => setOpen(false)}>工作流</a>
-          <a href="#field-notes" onClick={() => setOpen(false)}>产品实录</a>
+          <a href="#capabilities" onClick={() => setOpen(false)}>能力</a>
+          <a href="#field-notes" onClick={() => setOpen(false)}>界面实录</a>
           <a href="#install" onClick={() => setOpen(false)}>安装</a>
           <a href={repositoryUrl} target="_blank" rel="noreferrer"><GitFork size={14} /> GitHub</a>
           <a className="nav-download" href={releaseUrl} target="_blank" rel="noreferrer">下载 macOS 版 <ArrowRight size={14} /></a>
@@ -195,17 +219,20 @@ function App() {
 
       <main id="main-content" tabIndex={-1}>
         <section className="hero shell" aria-labelledby="hero-title">
-          <div className="hero-haze" aria-hidden="true" />
           <div className="hero-copy">
-            <p className="eyebrow">SUMI / MACOS AI WORKBENCH</p>
-            <h1 id="hero-title">工作有<br />问题，<br /><span>Ask sumi.</span></h1>
-            <p className="hero-lead">把资料、研究、写作和交付，放进同一条工作流。</p>
-            <p className="hero-note">Sumi 是面向知识工作的 macOS AI 工作台。你从一个真实任务开始，和 Agent 一起推进，最后带走自己的文档与交付物。</p>
+            <p className="eyebrow">面向知识工作的 macOS AI 工作台</p>
+            <h1 id="hero-title">工作有问题，<span>Ask sumi.</span></h1>
+            <p className="hero-lead">从资料与研究，到 Markdown、交付物和知识沉淀。</p>
+            <p className="hero-note">按事务建立工作区，按任务发起会话。模型供应商自己选，重复任务交给自动化；过程与结论都留在你的 Markdown 里。</p>
             <div className="hero-actions">
               <a className="button button-dark" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={16} /> 下载 macOS 版</a>
               <a className="text-link" href="#workflow">了解工作流 <ArrowDown size={15} /></a>
             </div>
-            <p className="hero-principle"><span>对话只是过程</span><strong>文档才是留下来的工作。</strong></p>
+            <ul className="hero-facts" aria-label="Sumi 核心特性">
+              <li>模型不锁定</li>
+              <li>重复任务自动化</li>
+              <li>Markdown 归你</li>
+            </ul>
           </div>
           <HeroVideo />
         </section>
@@ -213,9 +240,9 @@ function App() {
         <section className="workflow-section" id="workflow" aria-labelledby="workflow-title">
           <div className="shell">
             <div className="section-heading workflow-heading">
-              <p className="eyebrow">ONE CONTINUOUS WORKFLOW</p>
-              <h2 id="workflow-title">一项工作，<br />不该散落在<br />六个工具里。</h2>
-              <p>Sumi 把事务背景、任务会话、参考资料和正在形成的文档放在一起。上下文不断，工作才能一直往前走。</p>
+              <p className="eyebrow">完整工作流</p>
+              <h2 id="workflow-title">从一项事务开始，<br />持续做到交付。</h2>
+              <p>资料、对话和正在形成的文档都留在同一任务上下文中。过程不断，结果才不是一次性回答。</p>
             </div>
 
             <ol className="workflow-grid">
@@ -238,12 +265,30 @@ function App() {
           </div>
         </section>
 
+        <section className="capabilities-section" id="capabilities" aria-labelledby="capabilities-title">
+          <div className="shell capabilities-inner">
+            <div className="capabilities-heading">
+              <p className="eyebrow">能力与选择</p>
+              <h2 id="capabilities-title">工作流保持连续，工具选择保持开放。</h2>
+              <p>Sumi 负责组织工作。模型、自动化与 Skill，按你的实际需要组合。</p>
+            </div>
+            <ol className="capabilities-list">
+              {capabilities.map((item) => (
+                <li key={item.number}>
+                  <span>{item.number}</span>
+                  <div><h3>{item.title}</h3><p>{item.copy}</p></div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
         <section className="field-notes" id="field-notes" aria-labelledby="field-notes-title">
           <div className="shell notes-intro">
-            <p className="eyebrow">A REAL INTERFACE / A FICTIONAL CASE</p>
+            <p className="eyebrow">真实界面 · 虚构内容</p>
             <div>
-              <h2 id="field-notes-title">下面，用一项<br />虚构工作，<br />走完这条链路。</h2>
-              <p>演示任务是虚构的「新品上市计划」。它只是一个例子；换成市场调研、用户画像、功能规划或日常维护，工作方式不变。</p>
+              <h2 id="field-notes-title">不同的工作，<br />同一条推进路径。</h2>
+              <p>以下使用虚构业务内容演示真实界面。无论市场调研、用户画像、功能规划还是日常维护，工作方式都不变。</p>
             </div>
           </div>
 
@@ -259,7 +304,7 @@ function App() {
               </ul>
             </div>
             <figure className="screen-figure screen-context">
-              <img src="/actual-02-session-overview.png" width="1920" height="1080" alt="Sumi 中虚构新品上市计划的任务会话界面" loading="lazy" decoding="async" />
+              <img src="/actual-02-session-overview.png" width="1920" height="1080" alt="Sumi 中虚构业务任务的会话界面" loading="lazy" decoding="async" />
               <figcaption><span>任务上下文</span><strong>资料、研究与产物留在同一个会话。</strong></figcaption>
             </figure>
           </article>
@@ -280,19 +325,18 @@ function App() {
           <section className="inline-edit shell" aria-labelledby="inline-edit-title">
             <div className="inline-edit-heading">
               <p className="chapter-number">AI EDIT / YOU DECIDE</p>
-              <h2 id="inline-edit-title">AI 改的是你选中的那一段。<br />是否采用，由你决定。</h2>
+              <h2 id="inline-edit-title">AI 只改你选中的内容。<br />是否采用，由你决定。</h2>
               <p>选择内容、说明修改方向、比较新旧版本，然后接受或取消。原文不会在你确认前被悄悄覆盖。</p>
             </div>
             <EditCarousel />
           </section>
 
           <section className="deliverable-section" aria-labelledby="deliverable-title">
-            <div className="deliverable-haze" aria-hidden="true" />
             <div className="shell deliverable-inner">
               <div className="deliverable-heading">
                 <p className="chapter-number">03 / DELIVER</p>
-                <h2 id="deliverable-title">一个底稿，<br />多种交付。</h2>
-                <p>内容定稿后，再调用 Skill。Sumi 读取同一份 Markdown，把已经确认的结论生成适合交付的格式。</p>
+                <h2 id="deliverable-title">一份底稿，<br />多种交付。</h2>
+                <p>内容确认后再调用 Skill。Sumi 从同一份 Markdown 生成适合不同场景的交付物。</p>
               </div>
               <div className="format-list" aria-label="可生成的交付格式">
                 <span>Slides</span><span>DOCX</span><span>XLSX</span><span>PDF</span><span>HTML</span>
@@ -304,11 +348,11 @@ function App() {
               <div className="artifact-pair">
                 <div className="artifact-copy">
                   <FileText size={24} />
-                  <p>Markdown 是内容源头。Skill 改变交付形式，不改变已经确认的结论。</p>
+                  <p>Markdown 保留内容与结论，Skill 负责把它变成不同的交付形式。</p>
                   <span>工作底稿 → 专业 Skill → 最终产物</span>
                 </div>
                 <figure className="screen-figure artifact-figure">
-                  <img src="/actual-07-artifact.png" width="1920" height="1080" alt="由虚构新品上市计划 Markdown 生成的 HTML 汇报" loading="lazy" decoding="async" />
+                  <img src="/actual-07-artifact.png" width="1920" height="1080" alt="由虚构业务任务 Markdown 生成的 HTML 汇报" loading="lazy" decoding="async" />
                   <figcaption><span>生成结果</span><strong>可直接查看和交付的 HTML 汇报。</strong></figcaption>
                 </figure>
               </div>
@@ -318,8 +362,8 @@ function App() {
           <section className="knowledge-section shell" aria-labelledby="knowledge-title">
             <div className="knowledge-copy">
               <p className="chapter-number">04 / REMEMBER</p>
-              <h2 id="knowledge-title">交付完成，<br />知识还在。</h2>
-              <p>有长期价值的 Markdown，可以由你同步到知识库。下一项工作开始时，成熟的判断不必从头再来。</p>
+              <h2 id="knowledge-title">交付完成，<br />知识留下。</h2>
+              <p>有长期价值的 Markdown，可以由你同步到知识库。下一项工作开始时，已经形成的判断不必从头再来。</p>
               <p className="knowledge-choice"><Check size={15} /> 是否沉淀，由用户决定。</p>
             </div>
             <figure className="screen-figure knowledge-figure">
@@ -333,7 +377,7 @@ function App() {
           <div className="shell install-inner">
             <div className="install-heading">
               <p className="eyebrow">START ON MACOS</p>
-              <h2 id="install-title">把下一件工作，<br />交给 Sumi。</h2>
+              <h2 id="install-title">在 macOS 上，<br />开始使用 Sumi。</h2>
               <p>从 GitHub Releases 获取应用。若 macOS 首次打开时提示无法验证开发者，可在“隐私与安全”中只为 Sumi 单独放行。</p>
               <a className="button button-light" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={17} /> 前往下载</a>
             </div>
@@ -346,12 +390,11 @@ function App() {
         </section>
 
         <section className="closing-section" aria-labelledby="closing-title">
-          <div className="closing-haze" aria-hidden="true" />
           <div className="shell closing-inner">
-            <p className="eyebrow">FROM QUESTION TO DELIVERY</p>
-            <h2 id="closing-title">不是多问一句。<br />是把工作往前推一步。</h2>
+            <p className="eyebrow">从问题到交付</p>
+            <h2 id="closing-title">下一项工作，<br />Ask sumi.</h2>
             <div>
-              <p>事务、任务、协作、文档、交付与知识，在一条工作流里连续发生。</p>
+              <p>工作不只停在一次回答里。事务、任务、文档、交付与知识，在同一条工作流中持续向前。</p>
               <a className="button button-dark" href={releaseUrl} target="_blank" rel="noreferrer">下载 Sumi <ArrowRight size={16} /></a>
             </div>
           </div>
