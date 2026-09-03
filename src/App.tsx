@@ -3,24 +3,17 @@ import {
   ArrowDown,
   ArrowLeft,
   ArrowRight,
-  Bell,
   Blocks,
-  Bot,
   CalendarClock,
   Cable,
   Check,
-  Circle,
   Download,
   FileCheck2,
-  FileText,
-  FolderOpen,
   GitFork,
   KeyRound,
   Menu,
   Play,
-  Search,
   ShieldCheck,
-  Sparkles,
   X,
 } from 'lucide-react'
 
@@ -45,7 +38,7 @@ const workspaceViews = [
     copy: '工作区承接事务，会话聚焦目标。上传文件、联网研究与 Agent 的判断都留在任务上下文里。',
     image: '/actual-02-session-overview.png',
     alt: 'Sumi 中使用虚构数据展示的任务会话界面',
-    note: '虚构演示任务 · 市场机会研究',
+    note: '虚构演示任务 · 季度经营复盘',
   },
   {
     id: 'document',
@@ -274,75 +267,12 @@ function EditCarousel() {
   )
 }
 
-function ProviderMockup() {
+function FeatureScreenshot({ image, alt, label }: { image: string; alt: string; label: string }) {
   return (
-    <div className="ui-mockup provider-mockup" aria-label="虚构的模型配置界面示意">
-      <div className="mockup-toolbar"><span>模型配置</span><span className="mockup-button">＋ 新建配置</span></div>
-      <div className="profile-list">
-        <div className="profile active"><span className="profile-mark"><Bot size={15} /></span><p><strong>日常任务</strong><small>自定义模型 · 已连接</small></p><Check size={15} /></div>
-        <div className="profile"><span className="profile-mark"><Sparkles size={15} /></span><p><strong>深度研究</strong><small>自定义模型 · 已连接</small></p><Circle size={13} /></div>
-      </div>
-      <div className="profile-fields">
-        <label>Base URL<span>https://api.example.com</span></label>
-        <label>API Key<span>••••••••••••••••</span></label>
-        <label>模型<span>your-model-name</span></label>
-      </div>
-      <p className="mockup-foot"><ShieldCheck size={14} /> API Key 在系统支持时使用安全存储加密</p>
-    </div>
-  )
-}
-
-function AutomationMockup() {
-  return (
-    <div className="ui-mockup automation-mockup" aria-label="虚构的自动化任务界面示意">
-      <div className="mockup-toolbar"><span>自动化</span><small>2 个任务正在启用</small></div>
-      <div className="automation-item">
-        <span className="automation-icon"><Search size={16} /></span>
-        <p><strong>竞品动态周报</strong><small>每周一 09:30 · 关联 2 个网址</small></p>
-        <em>已启用</em>
-      </div>
-      <div className="automation-item">
-        <span className="automation-icon"><FolderOpen size={16} /></span>
-        <p><strong>整理新增访谈</strong><small>每天 18:00 · 用户研究工作区</small></p>
-        <em>已启用</em>
-      </div>
-      <div className="automation-run">
-        <span><CalendarClock size={15} /> 下次运行</span>
-        <strong>明天 09:30</strong>
-        <span><Bell size={15} /> 完成后通知</span>
-      </div>
-    </div>
-  )
-}
-
-function ConnectorMockup() {
-  const groups = [
-    ['内容与数据', '文档', '云空间', '多维表格', '知识库'],
-    ['沟通与协作', '日历', '消息', '任务', '会议'],
-    ['组织与业务', '审批', 'OKR', '通讯录', '应用'],
-  ]
-  return (
-    <div className="ui-mockup connector-mockup" aria-label="飞书连接器能力示意">
-      <div className="connector-status"><span className="connector-logo">飞</span><p><strong>飞书连接器</strong><small>运行组件已就绪</small></p><em>已连接</em></div>
-      <div className="permission-groups">
-        {groups.map(([title, ...items]) => (
-          <div key={title}><strong>{title}</strong><p>{items.map((item) => <span key={item}><Check size={11} />{item}</span>)}</p></div>
-        ))}
-      </div>
-      <p className="mockup-foot"><KeyRound size={14} /> 业务权限按需增量授权</p>
-    </div>
-  )
-}
-
-function SkillsMockup() {
-  return (
-    <div className="ui-mockup skills-mockup" aria-label="Sumi Skill 与 Office 文档能力示意">
-      <div className="mockup-toolbar"><span>Skills</span><small>内置能力与社区精选</small></div>
-      <div className="skill-row"><span><FileText size={17} /></span><p><strong>Office 文档</strong><small>创建、编辑、渲染并校验办公文件</small></p><em>已启用</em></div>
-      <div className="office-formats"><span>DOCX</span><span>XLSX</span><span>PPTX</span></div>
-      <div className="skill-row"><span><Blocks size={17} /></span><p><strong>社区 Skill</strong><small>按需安装、更新或卸载</small></p><em>可扩展</em></div>
-      <p className="mockup-foot"><FileCheck2 size={14} /> Office 文档能力无需安装 Microsoft Office</p>
-    </div>
+    <figure className="ui-mockup feature-screen">
+      <img src={image} width="1440" height="810" alt={alt} loading="lazy" decoding="async" />
+      <figcaption><span>最新版 Sumi 界面</span><strong>{label}</strong></figcaption>
+    </figure>
   )
 }
 
@@ -441,7 +371,11 @@ function App() {
                 <h3>不绑定单一模型供应商</h3>
                 <p>配置 Base URL、API Key 和模型名称，保存多套模型连接，按任务切换。</p>
               </div>
-              <ProviderMockup />
+              <FeatureScreenshot
+                image="/actual-16-model-settings.png"
+                alt="Sumi 使用虚构配置展示自定义模型供应商界面"
+                label="模型连接与供应商配置"
+              />
             </div>
 
             <div className="feature-row feature-row-reverse">
@@ -451,7 +385,11 @@ function App() {
                 <h3>把重复任务交给自动化</h3>
                 <p>按每天、每周或自定义频率执行；关联会话、工作区、目录与网址，并记录每次结果。</p>
               </div>
-              <AutomationMockup />
+              <FeatureScreenshot
+                image="/actual-17-automation.png"
+                alt="Sumi 使用虚构任务展示自动化管理界面"
+                label="周期任务与运行记录"
+              />
             </div>
 
             <div className="feature-row">
@@ -461,7 +399,11 @@ function App() {
                 <h3>把飞书接进任务上下文</h3>
                 <p>连接文档、云空间、日历、消息、任务、会议与更多飞书能力；权限按业务域逐项授权。</p>
               </div>
-              <ConnectorMockup />
+              <FeatureScreenshot
+                image="/actual-18-connectors.png"
+                alt="Sumi 使用虚构状态展示连接器界面"
+                label="飞书连接器与授权状态"
+              />
             </div>
 
             <div className="feature-row feature-row-reverse">
@@ -471,7 +413,11 @@ function App() {
                 <h3>用 Skill 扩展专业能力</h3>
                 <p>启用内置能力，安装社区 Skill。无需 Microsoft Office，也能处理 DOCX、XLSX 与 PPTX。</p>
               </div>
-              <SkillsMockup />
+              <FeatureScreenshot
+                image="/actual-19-skills.png"
+                alt="Sumi 展示内置能力与社区 Skill 的界面"
+                label="内置能力与社区 Skill"
+              />
             </div>
           </div>
         </section>
@@ -485,7 +431,7 @@ function App() {
               <p className="ownership"><ShieldCheck size={15} /> 是否沉淀，由你决定。</p>
             </div>
             <figure className="product-screen knowledge-screen">
-              <img src="/actual-05-knowledge-sync.png" width="1920" height="1080" alt="Sumi 使用虚构内容展示的知识同步界面" loading="lazy" decoding="async" />
+              <img src="/actual-05-knowledge-sync.png" width="1440" height="810" alt="Sumi 使用虚构内容展示的知识图谱界面" loading="lazy" decoding="async" />
               <figcaption><span>知识库</span><strong>文档、链接与长期上下文</strong></figcaption>
             </figure>
           </div>
