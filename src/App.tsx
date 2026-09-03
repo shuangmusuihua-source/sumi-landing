@@ -21,31 +21,31 @@ const releaseUrl = 'https://github.com/shuangmusuihua-source/vision-agent/releas
 const repositoryUrl = 'https://github.com/shuangmusuihua-source/vision-agent'
 
 const workflow = [
-  { number: '01', title: '事务', copy: '把同一件事的背景、资料和长期进展放进一个工作区。' },
-  { number: '02', title: '任务', copy: '围绕明确目标创建会话，让上下文彼此独立。' },
-  { number: '03', title: '执行', copy: 'Agent 读取文件、联网研究、调用工具并持续汇报进度。' },
-  { number: '04', title: '文档', copy: '结论进入可编辑、可比较的 Markdown 工作底稿。' },
-  { number: '05', title: '交付', copy: '用 Skill 生成 DOCX、XLSX、PPTX、PDF 或 HTML。' },
-  { number: '06', title: '知识', copy: '把值得复用的内容同步到知识库并建立关联。' },
+  { number: '01', title: '事务工作区', copy: '一项长期事务，一个独立空间。资料和进展都放在这里。' },
+  { number: '02', title: '任务会话', copy: '为具体目标新建会话。各做各的，互不串线。' },
+  { number: '03', title: '协作执行', copy: '读文件、查资料、用工具。Agent 边做边汇报。' },
+  { number: '04', title: 'Markdown', copy: '讨论随手成稿。你可以直接编辑，也能让 AI 精修。' },
+  { number: '05', title: 'Skill 交付', copy: '一份定稿，生成 DOCX、XLSX、PPTX、PDF 或 HTML。' },
+  { number: '06', title: '知识库', copy: '值得留下的内容，同步到知识库。下次还用得上。' },
 ]
 
 const workspaceViews = [
   {
     id: 'context',
-    tab: '研究协作',
-    kicker: '上下文持续存在',
-    title: '资料、讨论和产物，围绕同一项任务。',
-    copy: '工作区承接事务，会话聚焦目标。上传文件、联网研究与 Agent 的判断都留在任务上下文里。',
+    tab: '任务协作',
+    kicker: '上下文，一直在',
+    title: '资料在一起，思路接得上。',
+    copy: '每项事务都有工作区，每个目标都有会话。文件、研究和讨论留在原处，回来继续做，不用重新交代。',
     image: '/actual-02-session-overview.png',
     alt: 'Sumi 中使用虚构数据展示的任务会话界面',
     note: '虚构演示任务 · 季度经营复盘',
   },
   {
     id: 'document',
-    tab: '文档精修',
-    kicker: 'Markdown 不是临时回答',
-    title: '边协作，边形成一份真正可用的文档。',
-    copy: '预览、直接编辑、选区改写、比较新旧版本。每一次 AI 修改都由你决定接受或取消。',
+    tab: '文档成稿',
+    kicker: 'Markdown，就是工作底稿',
+    title: '边讨论，边写成。',
+    copy: '直接预览和编辑。想改哪一段，就选中哪一段交给 AI；改前改后放在一起，你确认才算数。',
     image: '/actual-11-inline-review.png',
     alt: 'Sumi 中使用虚构内容展示的 Markdown AI 修改对比界面',
     note: '选中内容 → 说明方向 → 比较 → 决定',
@@ -53,9 +53,9 @@ const workspaceViews = [
   {
     id: 'deliver',
     tab: 'Skill 交付',
-    kicker: '同一份结论，多种格式',
-    title: '先把内容定稿，再生成专业交付物。',
-    copy: 'Skill 读取已经确认的 Markdown，生成适合汇报、协作或存档的文件，并在会话中保留结果。',
+    kicker: '内容定了，格式随你',
+    title: '同一份结论，交出不同成品。',
+    copy: 'Skill 从已确认的 Markdown 出发，生成汇报、表格、文档、PDF 或网页。产物继续留在会话里。',
     image: '/actual-07-artifact.png',
     alt: 'Sumi 中使用虚构业务内容生成的 HTML 交付物',
     note: 'Markdown → Skill → 最终产物',
@@ -97,9 +97,9 @@ function Header() {
       <div className="shell header-inner">
         <Brand />
         <nav id="primary-navigation" className={open ? 'nav is-open' : 'nav'} aria-label="主要导航">
-          <a href="#workflow" onClick={() => setOpen(false)}>工作流</a>
-          <a href="#workspace" onClick={() => setOpen(false)}>工作台</a>
-          <a href="#open-system" onClick={() => setOpen(false)}>开放能力</a>
+          <a href="#workflow" onClick={() => setOpen(false)}>怎么工作</a>
+          <a href="#workspace" onClick={() => setOpen(false)}>文档</a>
+          <a href="#open-system" onClick={() => setOpen(false)}>扩展</a>
           <a href="#install" onClick={() => setOpen(false)}>下载</a>
           <a href={repositoryUrl} target="_blank" rel="noreferrer"><GitFork size={14} /> GitHub</a>
           <a className="nav-download" href={releaseUrl} target="_blank" rel="noreferrer">下载 Sumi <ArrowRight size={14} /></a>
@@ -127,8 +127,8 @@ function HeroVideo() {
     <figure className={`hero-video${playing ? ' is-playing' : ''}`}>
       <div className="window-bar" aria-hidden="true">
         <span /><span /><span />
-        <strong>Sumi · 完整工作流</strong>
-        <small>演示数据均为虚构</small>
+        <strong>Sumi · 一项工作的全过程</strong>
+        <small>以下内容均为虚构演示</small>
       </div>
       <div className="video-frame">
         <video
@@ -136,7 +136,7 @@ function HeroVideo() {
           controls
           playsInline
           preload="metadata"
-          poster="/workflow-poster.png"
+          poster="/actual-02-session-overview.png"
           aria-label="Sumi 从事务工作区到 Skill 交付的完整工作流演示"
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
@@ -152,8 +152,8 @@ function HeroVideo() {
           onClick={() => void videoRef.current?.play()}
         >
           <span><Play size={17} fill="currentColor" /></span>
-          <strong>看一项工作如何完成</strong>
-          <small>69 秒真实操作</small>
+          <strong>69 秒，看 Sumi 怎么工作</strong>
+          <small>最新版真实界面</small>
         </button>
       </div>
     </figure>
@@ -286,17 +286,17 @@ function App() {
         <section className="hero shell" aria-labelledby="hero-title">
           <div className="hero-copy">
             <p className="eyebrow">SUMI FOR MACOS</p>
-            <h1 id="hero-title">把一项工作，<span>真正做完。</span></h1>
-            <p className="hero-lead">Sumi 是面向知识工作的 AI 工作台。</p>
-            <p className="hero-note">从资料、研究和多轮协作，到可编辑的 Markdown、专业交付物与知识沉淀，都在同一条工作流里持续发生。</p>
+            <h1 id="hero-title">工作有问题，<span>Ask sumi。</span></h1>
+            <p className="hero-lead">Sumi 是为知识工作准备的 AI 工作台。</p>
+            <p className="hero-note">放进资料，和 Agent 一起研究、写作、修改。内容定稿后，再生成能直接交付的文件。</p>
             <div className="hero-actions">
-              <a className="button button-dark" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={16} /> 下载 macOS 版</a>
-              <a className="text-link" href="#workflow">看看如何工作 <ArrowDown size={15} /></a>
+              <a className="button button-dark" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={16} /> 下载 Sumi</a>
+              <a className="text-link" href="#workflow">看看 Sumi 怎么工作 <ArrowDown size={15} /></a>
             </div>
             <ul className="hero-facts" aria-label="Sumi 核心特性">
-              <li>模型自己配置</li>
-              <li>过程由你掌握</li>
-              <li>成果留在本地</li>
+              <li>模型由你选择</li>
+              <li>每一步看得见</li>
+              <li>文件留在本地</li>
             </ul>
           </div>
           <HeroVideo />
@@ -304,18 +304,18 @@ function App() {
 
         <section className="statement-section">
           <div className="shell statement-inner">
-            <p className="eyebrow">NOT JUST AN ANSWER</p>
-            <h2>不只是回答问题。<br />而是把工作推进到底。</h2>
-            <p>Agent 可以规划、调用工具和生成文件；你始终能看到任务进度、处理授权、回答关键问题，并决定最终结果。</p>
+            <p className="eyebrow">答案，只是开始</p>
+            <h2>问完了，<br />接着把事做完。</h2>
+            <p>Sumi 会规划任务、读取资料、调用工具，也会在需要你判断时停下来。进度看得见，结果由你确认。</p>
           </div>
         </section>
 
         <section className="workflow-section" id="workflow" aria-labelledby="workflow-title">
           <div className="shell">
             <header className="section-head">
-              <p className="eyebrow">ONE CONTINUOUS WORKFLOW</p>
-              <h2 id="workflow-title">一条工作流，<br />从问题走到交付。</h2>
-              <p>不同任务可以有不同方法，但上下文、过程与成果不必散落在不同工具里。</p>
+              <p className="eyebrow">一件事，一条线</p>
+              <h2 id="workflow-title">从开题，<br />一路做到交付。</h2>
+              <p>任务各有不同。资料、讨论、文档和产物，不必散在不同工具里。</p>
             </header>
             <ol className="workflow-grid">
               {workflow.map((step) => (
@@ -332,9 +332,9 @@ function App() {
         <section className="workspace-section" id="workspace" aria-labelledby="workspace-title">
           <div className="shell">
             <header className="center-head">
-              <p className="eyebrow">THE WORKBENCH</p>
-              <h2 id="workspace-title">工作在推进，<br />文档也在成形。</h2>
-              <p>真实 Sumi 界面，所有业务内容均为虚构演示数据。</p>
+              <p className="eyebrow">真实工作台</p>
+              <h2 id="workspace-title">一边做事，<br />一边成稿。</h2>
+              <p>下方均为最新版 Sumi 界面；任务和内容为虚构演示。</p>
             </header>
             <WorkspaceShowcase />
           </div>
@@ -343,13 +343,13 @@ function App() {
         <section className="control-section" aria-labelledby="control-title">
           <div className="shell control-layout">
             <div className="control-copy">
-              <p className="eyebrow">AI EDIT / YOU DECIDE</p>
-              <h2 id="control-title">AI 可以修改。<br />决定权仍然在你。</h2>
-              <p>选择一段内容，说明修改方向，比较新旧版本，再接受或取消。原文不会在确认前被覆盖。</p>
+              <p className="eyebrow">AI 动手，你点头</p>
+              <h2 id="control-title">想怎么改，告诉 Sumi。<br />要不要改，你来定。</h2>
+              <p>选中一段，写下修改方向。Sumi 把新旧版本并排放好，确认后才替换原文。</p>
               <ul>
-                <li><Check size={14} /> 只修改选中的内容</li>
-                <li><Check size={14} /> 修改前后清楚可比</li>
-                <li><Check size={14} /> 随时接受或取消</li>
+                <li><Check size={14} /> 只动选中的段落</li>
+                <li><Check size={14} /> 改前改后，一眼可比</li>
+                <li><Check size={14} /> 接受或取消，随时决定</li>
               </ul>
             </div>
             <EditCarousel />
@@ -359,17 +359,17 @@ function App() {
         <section className="open-section" id="open-system" aria-labelledby="open-title">
           <div className="shell">
             <header className="section-head open-head">
-              <p className="eyebrow">OPEN BY DESIGN</p>
-              <h2 id="open-title">工作流统一，<br />工具保持开放。</h2>
-              <p>模型、自动化、连接器和 Skill 都可以按任务组合。Sumi 负责把它们组织进同一套工作方式。</p>
+              <p className="eyebrow">按你的习惯来</p>
+              <h2 id="open-title">模型自己选，<br />能力接着加。</h2>
+              <p>供应商、自动化、连接器和 Skill 都可以自由组合。Sumi 按你的工作方式来。</p>
             </header>
 
             <div className="feature-row">
               <div className="feature-copy">
                 <span className="feature-index">01</span>
                 <Cable size={22} />
-                <h3>不绑定单一模型供应商</h3>
-                <p>配置 Base URL、API Key 和模型名称，保存多套模型连接，按任务切换。</p>
+                <h3>常用哪个模型，你来定。</h3>
+                <p>填入 Base URL、API Key 和模型名称。多套连接都能保存，需要时切换。</p>
               </div>
               <FeatureScreenshot
                 image="/actual-16-model-settings.png"
@@ -382,8 +382,8 @@ function App() {
               <div className="feature-copy">
                 <span className="feature-index">02</span>
                 <CalendarClock size={22} />
-                <h3>把重复任务交给自动化</h3>
-                <p>按每天、每周或自定义频率执行；关联会话、工作区、目录与网址，并记录每次结果。</p>
+                <h3>重复的工作，按时自己跑。</h3>
+                <p>每天、每周或自定义频率都可以。关联会话、工作区、目录和网址，每次结果都有记录。</p>
               </div>
               <FeatureScreenshot
                 image="/actual-17-automation.png"
@@ -396,8 +396,8 @@ function App() {
               <div className="feature-copy">
                 <span className="feature-index">03</span>
                 <Cable size={22} />
-                <h3>把飞书接进任务上下文</h3>
-                <p>连接文档、云空间、日历、消息、任务、会议与更多飞书能力；权限按业务域逐项授权。</p>
+                <h3>飞书里的内容，直接接进来。</h3>
+                <p>连接文档、云空间、日历、消息、任务和会议。需要哪些能力，就授权哪些。</p>
               </div>
               <FeatureScreenshot
                 image="/actual-18-connectors.png"
@@ -410,8 +410,8 @@ function App() {
               <div className="feature-copy">
                 <span className="feature-index">04</span>
                 <Blocks size={22} />
-                <h3>用 Skill 扩展专业能力</h3>
-                <p>启用内置能力，安装社区 Skill。无需 Microsoft Office，也能处理 DOCX、XLSX 与 PPTX。</p>
+                <h3>要做什么，就装什么 Skill。</h3>
+                <p>启用内置能力，也能安装社区 Skill。无需 Microsoft Office，照样处理 DOCX、XLSX 和 PPTX。</p>
               </div>
               <FeatureScreenshot
                 image="/actual-19-skills.png"
@@ -425,10 +425,10 @@ function App() {
         <section className="knowledge-section" aria-labelledby="knowledge-title">
           <div className="shell knowledge-layout">
             <div className="knowledge-copy">
-              <p className="eyebrow">KEEP WHAT MATTERS</p>
-              <h2 id="knowledge-title">交付会结束，<br />知识会留下。</h2>
-              <p>把有长期价值的 Markdown 同步到知识库。全局搜索、双向链接与图谱，让已经形成的判断在下一项任务中继续发挥作用。</p>
-              <p className="ownership"><ShieldCheck size={15} /> 是否沉淀，由你决定。</p>
+              <p className="eyebrow">做完，也留下</p>
+              <h2 id="knowledge-title">这次的结论，<br />下次接着用。</h2>
+              <p>把值得保留的 Markdown 同步到知识库。搜索、双向链接和图谱，帮你在新任务里找到旧思路。</p>
+              <p className="ownership"><ShieldCheck size={15} /> 存不存，由你定。</p>
             </div>
             <figure className="product-screen knowledge-screen">
               <img src="/actual-05-knowledge-sync.png" width="1440" height="810" alt="Sumi 使用虚构内容展示的知识图谱界面" loading="lazy" decoding="async" />
@@ -439,9 +439,9 @@ function App() {
 
         <section className="ownership-section">
           <div className="shell ownership-grid">
-            <div><ShieldCheck size={20} /><h3>文件留在你的目录</h3><p>工作区、会话产物与知识库都对应真实的本地文件和目录。</p></div>
-            <div><KeyRound size={20} /><h3>凭据由系统保护</h3><p>API Key 在系统支持时使用 Electron 安全存储加密。</p></div>
-            <div><FileCheck2 size={20} /><h3>操作需要明确授权</h3><p>文件访问、工具调用与外部权限在执行过程中清楚呈现。</p></div>
+            <div><ShieldCheck size={20} /><h3>文件，就在你的目录里。</h3><p>工作区、会话产物和知识库，都对应本地真实文件和目录。</p></div>
+            <div><KeyRound size={20} /><h3>密钥，交给系统保管。</h3><p>系统支持时，API Key 会由 Electron 安全存储加密。</p></div>
+            <div><FileCheck2 size={20} /><h3>操作授权，清清楚楚。</h3><p>文件访问、工具调用和外部权限，会在执行过程中清楚呈现。</p></div>
           </div>
         </section>
 
@@ -449,11 +449,11 @@ function App() {
           <div className="shell install-layout">
             <div>
               <p className="eyebrow">SUMI 1.9 · APPLE SILICON</p>
-              <h2 id="install-title">下一项工作，<br /><span>用 Sumi 做完。</span></h2>
+              <h2 id="install-title">下一项工作，<br /><span>从 Sumi 开始。</span></h2>
             </div>
             <div className="install-copy">
-              <p>从 GitHub Releases 下载 macOS 版。当前发布配置面向 Apple Silicon。</p>
-              <a className="button button-light" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={17} /> 前往下载</a>
+              <p>前往 GitHub Releases 下载 macOS 版。当前版本适用于 Apple Silicon Mac。</p>
+              <a className="button button-light" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={17} /> 下载 Sumi</a>
               <small>若系统提示无法验证开发者，请在“系统设置 → 隐私与安全”中仅为 Sumi 单独放行，无需关闭 Gatekeeper。</small>
             </div>
           </div>
@@ -462,7 +462,7 @@ function App() {
 
       <footer className="shell footer">
         <Brand />
-        <p>把一项工作，真正做完。</p>
+        <p>从一个问题，做到交付。</p>
         <div>
           <a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub</a>
           <a href="#install">下载与安装</a>
