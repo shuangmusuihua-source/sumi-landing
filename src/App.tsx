@@ -12,6 +12,7 @@ import {
   GitFork,
   KeyRound,
   Menu,
+  Pause,
   Play,
   ShieldCheck,
   X,
@@ -121,10 +122,17 @@ function Header() {
 
 function HeroVideo() {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [playing, setPlaying] = useState(false)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    video.defaultPlaybackRate = 1.5
+    video.playbackRate = 1.5
+    void video.play().catch(() => undefined)
+  }, [])
 
   return (
-    <figure className={`hero-video${playing ? ' is-playing' : ''}`}>
+    <figure className="hero-video is-playing">
       <div className="window-bar" aria-hidden="true">
         <span /><span /><span />
         <strong>Sumi · 一项工作的全过程</strong>
@@ -133,28 +141,23 @@ function HeroVideo() {
       <div className="video-frame">
         <video
           ref={videoRef}
+          autoPlay
+          muted
+          loop
           controls
           playsInline
           preload="metadata"
           poster="/actual-02-session-overview.png"
           aria-label="Sumi 从事务工作区到 Skill 交付的完整工作流演示"
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          onEnded={() => setPlaying(false)}
+          onLoadedMetadata={(event) => {
+            event.currentTarget.defaultPlaybackRate = 1.5
+            event.currentTarget.playbackRate = 1.5
+            void event.currentTarget.play().catch(() => undefined)
+          }}
         >
           <source src="/sumi-workflow-web.mp4" type="video/mp4" />
           你的浏览器暂不支持视频播放。
         </video>
-        <button
-          className="video-play"
-          type="button"
-          aria-label="播放 Sumi 完整工作流演示"
-          onClick={() => void videoRef.current?.play()}
-        >
-          <span><Play size={17} fill="currentColor" /></span>
-          <strong>69 秒，看 Sumi 怎么工作</strong>
-          <small>最新版真实界面</small>
-        </button>
       </div>
     </figure>
   )
@@ -163,38 +166,39 @@ function HeroVideo() {
 function WorkspaceShowcase() {
   const [activeId, setActiveId] = useState(workspaceViews[0].id)
   const active = workspaceViews.find((item) => item.id === activeId) ?? workspaceViews[0]
-
   return (
     <div className="workspace-showcase">
-      <div className="workspace-tabs" role="tablist" aria-label="Sumi 工作过程">
-        {workspaceViews.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={activeId === item.id}
-            aria-controls="workspace-panel"
-            id={`workspace-tab-${item.id}`}
-            onClick={() => setActiveId(item.id)}
-            onKeyDown={(event) => {
-              if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
-              event.preventDefault()
-              const tabs = Array.from(
-                event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? [],
-              )
-              const currentIndex = tabs.indexOf(event.currentTarget)
-              const nextIndex = event.key === 'Home'
-                ? 0
-                : event.key === 'End'
-                  ? tabs.length - 1
-                  : (currentIndex + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length
-              setActiveId(workspaceViews[nextIndex].id)
-              tabs[nextIndex]?.focus()
-            }}
-          >
-            {item.tab}
-          </button>
-        ))}
+      <div className="workspace-topline">
+        <div className="workspace-tabs" role="tablist" aria-label="Sumi 工作过程">
+          {workspaceViews.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={activeId === item.id}
+              aria-controls="workspace-panel"
+              id={`workspace-tab-${item.id}`}
+              onClick={() => setActiveId(item.id)}
+              onKeyDown={(event) => {
+                if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
+                event.preventDefault()
+                const tabs = Array.from(
+                  event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? [],
+                )
+                const currentIndex = tabs.indexOf(event.currentTarget)
+                const nextIndex = event.key === 'Home'
+                  ? 0
+                  : event.key === 'End'
+                    ? tabs.length - 1
+                    : (currentIndex + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length
+                setActiveId(workspaceViews[nextIndex].id)
+                tabs[nextIndex]?.focus()
+              }}
+            >
+              {item.tab}
+            </button>
+          ))}
+        </div>
       </div>
       <div
         className="workspace-panel"
@@ -219,6 +223,8 @@ function WorkspaceShowcase() {
 function EditCarousel() {
   const trackRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [autoAdvance, setAutoAdvance] = useState(true)
+  const [interactionPaused, setInteractionPaused] = useState(false)
 
   const goToStep = (index: number) => {
     const next = Math.max(0, Math.min(editSteps.length - 1, index))
@@ -231,11 +237,33 @@ function EditCarousel() {
     setActiveIndex(next)
   }
 
+  useEffect(() => {
+    if (!autoAdvance || interactionPaused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const timer = window.setTimeout(() => goToStep((activeIndex + 1) % editSteps.length), 4200)
+    return () => window.clearTimeout(timer)
+  }, [activeIndex, autoAdvance, interactionPaused])
+
   return (
-    <div className="edit-carousel">
+    <div
+      className="edit-carousel"
+      onPointerEnter={() => setInteractionPaused(true)}
+      onPointerLeave={() => setInteractionPaused(false)}
+      onFocusCapture={() => setInteractionPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setInteractionPaused(false)
+      }}
+    >
       <div className="carousel-head">
         <p><strong>{String(activeIndex + 1).padStart(2, '0')}</strong> / {String(editSteps.length).padStart(2, '0')}</p>
         <div>
+          <button
+            type="button"
+            aria-label={autoAdvance ? '暂停自动轮播' : '继续自动轮播'}
+            aria-pressed={!autoAdvance}
+            onClick={() => setAutoAdvance((value) => !value)}
+          >
+            {autoAdvance ? <Pause size={16} /> : <Play size={16} />}
+          </button>
           <button type="button" aria-label="查看上一步" disabled={activeIndex === 0} onClick={() => goToStep(activeIndex - 1)}><ArrowLeft size={17} /></button>
           <button type="button" aria-label="查看下一步" disabled={activeIndex === editSteps.length - 1} onClick={() => goToStep(activeIndex + 1)}><ArrowRight size={17} /></button>
         </div>
@@ -283,23 +311,27 @@ function App() {
       <Header />
 
       <main id="main-content" tabIndex={-1}>
-        <section className="hero shell" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <p className="eyebrow">SUMI FOR MACOS</p>
-            <h1 id="hero-title">工作有问题，<span>Ask sumi。</span></h1>
-            <p className="hero-lead">Sumi 是为知识工作准备的 AI 工作台。</p>
-            <p className="hero-note">放进资料，和 Agent 一起研究、写作、修改。内容定稿后，再生成能直接交付的文件。</p>
-            <div className="hero-actions">
-              <a className="button button-dark" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={16} /> 下载 Sumi</a>
-              <a className="text-link" href="#workflow">看看 Sumi 怎么工作 <ArrowDown size={15} /></a>
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="hero-grid shell">
+            <div className="hero-copy">
+              <p className="eyebrow"><span aria-hidden="true" /> SUMI FOR MACOS</p>
+              <h1 id="hero-title"><span className="hero-question">工作有问题，</span><span>Ask sumi。</span></h1>
+              <p className="hero-lead">Sumi 是为知识工作准备的 AI 工作台。</p>
+              <p className="hero-note">放进资料，和 Agent 一起研究、写作、修改。内容定稿后，再生成能直接交付的文件。</p>
+              <div className="hero-actions">
+                <a className="button button-dark" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={16} /> 下载 Sumi</a>
+                <a className="text-link" href="#workflow">看看 Sumi 怎么工作 <ArrowDown size={15} /></a>
+              </div>
+              <ul className="hero-facts" aria-label="Sumi 核心特性">
+                <li>模型由你选择</li>
+                <li>每一步看得见</li>
+                <li>文件留在本地</li>
+              </ul>
             </div>
-            <ul className="hero-facts" aria-label="Sumi 核心特性">
-              <li>模型由你选择</li>
-              <li>每一步看得见</li>
-              <li>文件留在本地</li>
-            </ul>
+            <div className="hero-stage">
+              <HeroVideo />
+            </div>
           </div>
-          <HeroVideo />
         </section>
 
         <section className="statement-section">
