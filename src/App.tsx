@@ -12,8 +12,10 @@ import {
   GitFork,
   KeyRound,
   Menu,
+  MessageCircle,
   Pause,
   Play,
+  ScanLine,
   ShieldCheck,
   X,
 } from 'lucide-react'
@@ -304,6 +306,22 @@ function FeatureScreenshot({ image, alt, label }: { image: string; alt: string; 
   )
 }
 
+function AskHomePreview() {
+  return (
+    <figure className="ask-home-preview">
+      <img
+        src="/actual-20-ask-home.png"
+        width="2400"
+        height="1264"
+        alt="Sumi 真实首页，展示通用问答入口和整理桌面、整理文件、系统清理、性能优化四个常用工具"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption><span>真实 Sumi 首页</span><strong>隔离环境 · 不含用户数据</strong></figcaption>
+    </figure>
+  )
+}
+
 function App() {
   return (
     <div id="top">
@@ -331,6 +349,21 @@ function App() {
             <div className="hero-stage">
               <HeroVideo />
             </div>
+          </div>
+        </section>
+
+        <section className="quick-start-section" aria-labelledby="quick-start-title">
+          <div className="shell quick-start-layout">
+            <div className="quick-start-copy">
+              <p className="eyebrow">通用问答与通用应用</p>
+              <h2 id="quick-start-title"><span>常用工具，</span><span>通用问答，</span><span className="quick-start-accent">打开就问。</span></h2>
+              <p>日常问题，直接问 Ask sumi。整理文件、清理系统这类常见任务，也可以从首页应用一步开始。</p>
+              <ul>
+                <li><MessageCircle size={16} /><span><strong>Ask sumi</strong> 随时回答问题，也能调用工具帮你处理事情。</span></li>
+                <li><Blocks size={16} /><span><strong>通用应用</strong> 把常见任务准备好，打开就能用。</span></li>
+              </ul>
+            </div>
+            <AskHomePreview />
           </div>
         </section>
 
@@ -474,6 +507,26 @@ function App() {
             <div><ShieldCheck size={20} /><h3>文件，就在你的目录里。</h3><p>工作区、会话产物和知识库，都对应本地真实文件和目录。</p></div>
             <div><KeyRound size={20} /><h3>密钥，交给系统保管。</h3><p>系统支持时，API Key 会由 Electron 安全存储加密。</p></div>
             <div><FileCheck2 size={20} /><h3>操作授权，清清楚楚。</h3><p>文件访问、工具调用和外部权限，会在执行过程中清楚呈现。</p></div>
+          </div>
+        </section>
+
+        <section className="contact-section" aria-labelledby="contact-title">
+          <div className="shell contact-layout">
+            <div className="contact-copy">
+              <p className="eyebrow">保持联系</p>
+              <h2 id="contact-title">用过以后，<br />告诉我们。</h2>
+              <p>扫码联系，交流使用体验和产品建议。每一条真实反馈，都会帮助 Sumi 继续变好。</p>
+              <span><ScanLine size={16} /> 使用微信扫码添加</span>
+            </div>
+            <figure className="contact-card">
+              <div className="contact-qr">
+                <img src="/sumi-wechat-contact-qr.png" width="900" height="900" alt="Sumi 产品交流微信二维码" loading="lazy" decoding="async" />
+              </div>
+              <figcaption>
+                <strong>扫码联系</strong>
+                <span>使用体验 · 产品建议交流</span>
+              </figcaption>
+            </figure>
           </div>
         </section>
 
