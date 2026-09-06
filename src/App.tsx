@@ -83,31 +83,30 @@ function Brand() {
 
 function Header() {
   const [open, setOpen] = useState(false)
+  const toggleRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const close = () => setOpen(false)
-    const escape = (event: KeyboardEvent) => event.key === 'Escape' && close()
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && open) {
+        close()
+        toggleRef.current?.focus()
+      }
+    }
     window.addEventListener('resize', close)
     window.addEventListener('keydown', escape)
     return () => {
       window.removeEventListener('resize', close)
       window.removeEventListener('keydown', escape)
     }
-  }, [])
+  }, [open])
 
   return (
     <header className="site-header">
       <div className="shell header-inner">
         <Brand />
-        <nav id="primary-navigation" className={open ? 'nav is-open' : 'nav'} aria-label="主要导航">
-          <a href="#workflow" onClick={() => setOpen(false)}>怎么工作</a>
-          <a href="#workspace" onClick={() => setOpen(false)}>文档</a>
-          <a href="#open-system" onClick={() => setOpen(false)}>扩展</a>
-          <a href="#install" onClick={() => setOpen(false)}>下载</a>
-          <a href={repositoryUrl} target="_blank" rel="noreferrer"><GitFork size={14} /> GitHub</a>
-          <a className="nav-download" href={releaseUrl} target="_blank" rel="noreferrer">下载 Sumi <ArrowRight size={14} /></a>
-        </nav>
         <button
+          ref={toggleRef}
           className="nav-toggle"
           type="button"
           aria-label={open ? '关闭导航' : '打开导航'}
@@ -117,6 +116,14 @@ function Header() {
         >
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
+        <nav id="primary-navigation" className={open ? 'nav is-open' : 'nav'} aria-label="主要导航">
+          <a href="#workflow" onClick={() => setOpen(false)}>怎么工作</a>
+          <a href="#workspace" onClick={() => setOpen(false)}>文档</a>
+          <a href="#open-system" onClick={() => setOpen(false)}>扩展</a>
+          <a href="#install" onClick={() => setOpen(false)}>下载</a>
+          <a href={repositoryUrl} target="_blank" rel="noreferrer"><GitFork size={14} /> GitHub</a>
+          <a className="nav-download" href={releaseUrl} target="_blank" rel="noreferrer">下载 Sumi <ArrowRight size={14} /></a>
+        </nav>
       </div>
     </header>
   )
