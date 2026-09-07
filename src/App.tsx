@@ -22,6 +22,7 @@ import {
 
 const releaseUrl = 'https://github.com/shuangmusuihua-source/vision-agent/releases/latest'
 const repositoryUrl = 'https://github.com/shuangmusuihua-source/vision-agent'
+const nameOriginUrl = 'https://colors.japanesewithanime.com/japanese-colors/%E5%A2%A8-sumi'
 
 const workflow = [
   { number: '01', title: '事务工作区', copy: '一项长期事务，一个独立空间。资料和进展都放在这里。' },
@@ -355,6 +356,25 @@ function App() {
             </div>
             <div className="hero-stage">
               <HeroVideo />
+            </div>
+          </div>
+        </section>
+
+        <section className="name-origin-section" aria-labelledby="name-origin-title">
+          <div className="shell name-origin-layout">
+            <div className="ink-mark" aria-hidden="true">
+              <span>墨</span>
+              <small>すみ · SUMI</small>
+              <em>墨色 · #1F1F1F</em>
+            </div>
+            <div className="name-origin-copy">
+              <p className="eyebrow">名字由来</p>
+              <h2 id="name-origin-title">Sumi，<br />写作「墨」。</h2>
+              <p className="name-origin-lead">在日语里，sumi（墨／すみ）指墨，也是一种近黑的传统色名。</p>
+              <p>墨从一块墨锭开始，经过研磨，才成为可以落笔、修改和留存的内容。我们喜欢这个名字，因为 Sumi 做的也是同一件事：让资料、想法和协作过程落到文档里，成为能继续编辑、交付和留下的成果。</p>
+              <a href={nameOriginUrl} target="_blank" rel="noreferrer">
+                查看「墨」的颜色与释义 <ArrowRight size={15} />
+              </a>
             </div>
           </div>
         </section>
