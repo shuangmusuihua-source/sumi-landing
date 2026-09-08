@@ -3,6 +3,7 @@ import {
   ArrowDown,
   ArrowLeft,
   ArrowRight,
+  BarChart3,
   Blocks,
   CalendarClock,
   Cable,
@@ -17,6 +18,7 @@ import {
   Play,
   ScanLine,
   ShieldCheck,
+  Zap,
   X,
 } from 'lucide-react'
 
@@ -473,6 +475,20 @@ function App() {
             <div className="feature-row feature-row-reverse">
               <div className="feature-copy">
                 <span className="feature-index">02</span>
+                <BarChart3 size={22} />
+                <h3>模型怎么用，花了多少，一眼看清。</h3>
+                <p>按 7 天、30 天、90 天或全部时间查看 Token、请求、会话和预估费用；数据只保存在本机。</p>
+              </div>
+              <FeatureScreenshot
+                image="/actual-21-model-usage.png"
+                alt="Sumi 使用虚构数据展示模型用量趋势、Token 构成和预估费用"
+                label="模型用量与费用分析"
+              />
+            </div>
+
+            <div className="feature-row">
+              <div className="feature-copy">
+                <span className="feature-index">03</span>
                 <CalendarClock size={22} />
                 <h3>重复的工作，按时自己跑。</h3>
                 <p>每天、每周或自定义频率都可以。关联会话、工作区、目录和网址，每次结果都有记录。</p>
@@ -484,9 +500,9 @@ function App() {
               />
             </div>
 
-            <div className="feature-row">
+            <div className="feature-row feature-row-reverse">
               <div className="feature-copy">
-                <span className="feature-index">03</span>
+                <span className="feature-index">04</span>
                 <Cable size={22} />
                 <h3>飞书里的内容，直接接进来。</h3>
                 <p>连接文档、云空间、日历、消息、任务和会议。需要哪些能力，就授权哪些。</p>
@@ -498,9 +514,23 @@ function App() {
               />
             </div>
 
+            <div className="feature-row">
+              <div className="feature-copy">
+                <span className="feature-index">05</span>
+                <Zap size={22} />
+                <h3>钉钉里的工作，也能接着做。</h3>
+                <p>连接文档、钉盘、多维表格、日程、待办和团队消息。能力按需授权，凭据独立保存在本机。</p>
+              </div>
+              <FeatureScreenshot
+                image="/actual-22-dingtalk.png"
+                alt="Sumi 使用虚构组织和账号展示钉钉连接器及按需授权界面"
+                label="钉钉连接器与按需授权"
+              />
+            </div>
+
             <div className="feature-row feature-row-reverse">
               <div className="feature-copy">
-                <span className="feature-index">04</span>
+                <span className="feature-index">06</span>
                 <Blocks size={22} />
                 <h3>要做什么，就装什么 Skill。</h3>
                 <p>启用内置能力，也能安装社区 Skill。无需 Microsoft Office，照样处理 DOCX、XLSX 和 PPTX。</p>
@@ -560,7 +590,7 @@ function App() {
         <section className="install-section" id="install" aria-labelledby="install-title">
           <div className="shell install-layout">
             <div>
-              <p className="eyebrow">SUMI 1.9 · APPLE SILICON</p>
+              <p className="eyebrow">SUMI 1.10 · APPLE SILICON</p>
               <h2 id="install-title">下一项工作，<br /><span>从 Sumi 开始。</span></h2>
             </div>
             <div className="install-copy">
