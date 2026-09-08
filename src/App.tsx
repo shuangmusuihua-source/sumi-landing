@@ -22,7 +22,9 @@ import {
   X,
 } from 'lucide-react'
 
-const releaseUrl = 'https://github.com/shuangmusuihua-source/vision-agent/releases/latest'
+// Keep the release notes and direct installer pinned to the same verified release.
+const releaseUrl = 'https://github.com/shuangmusuihua-source/vision-agent/releases/tag/v1.10.0'
+const downloadUrl = 'https://github.com/shuangmusuihua-source/vision-agent/releases/download/v1.10.0/sumi-1.10.0-arm64.dmg'
 const repositoryUrl = 'https://github.com/shuangmusuihua-source/vision-agent'
 const nameOriginUrl = 'https://colors.japanesewithanime.com/japanese-colors/%E5%A2%A8-sumi'
 
@@ -125,7 +127,7 @@ function Header() {
           <a href="#open-system" onClick={() => setOpen(false)}>扩展</a>
           <a href="#install" onClick={() => setOpen(false)}>下载</a>
           <a href={repositoryUrl} target="_blank" rel="noreferrer"><GitFork size={14} /> GitHub</a>
-          <a className="nav-download" href={releaseUrl} target="_blank" rel="noreferrer">下载 Sumi <ArrowRight size={14} /></a>
+          <a className="nav-download" href={downloadUrl} onClick={() => setOpen(false)}>下载 Sumi <ArrowRight size={14} /></a>
         </nav>
       </div>
     </header>
@@ -140,7 +142,14 @@ function HeroVideo() {
     if (!video) return
     video.defaultPlaybackRate = 1.5
     video.playbackRate = 1.5
-    void video.play().catch(() => undefined)
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const updatePlayback = () => {
+      if (preference.matches) video.pause()
+      else void video.play().catch(() => undefined)
+    }
+    updatePlayback()
+    preference.addEventListener('change', updatePlayback)
+    return () => preference.removeEventListener('change', updatePlayback)
   }, [])
 
   return (
@@ -153,7 +162,6 @@ function HeroVideo() {
       <div className="video-frame">
         <video
           ref={videoRef}
-          autoPlay
           muted
           loop
           controls
@@ -164,7 +172,9 @@ function HeroVideo() {
           onLoadedMetadata={(event) => {
             event.currentTarget.defaultPlaybackRate = 1.5
             event.currentTarget.playbackRate = 1.5
-            void event.currentTarget.play().catch(() => undefined)
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+              void event.currentTarget.play().catch(() => undefined)
+            }
           }}
         >
           <source src="/sumi-workflow-web.mp4" type="video/mp4" />
@@ -188,6 +198,7 @@ function WorkspaceShowcase() {
               type="button"
               role="tab"
               aria-selected={activeId === item.id}
+              tabIndex={activeId === item.id ? 0 : -1}
               aria-controls="workspace-panel"
               id={`workspace-tab-${item.id}`}
               onClick={() => setActiveId(item.id)}
@@ -235,7 +246,7 @@ function WorkspaceShowcase() {
 function EditCarousel() {
   const trackRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
-  const [autoAdvance, setAutoAdvance] = useState(true)
+  const [autoAdvance, setAutoAdvance] = useState(false)
   const [interactionPaused, setInteractionPaused] = useState(false)
 
   const goToStep = (index: number) => {
@@ -347,9 +358,13 @@ function App() {
               <p className="hero-lead">Sumi 是为知识工作准备的 AI 工作台。</p>
               <p className="hero-note">放进资料，和 Agent 一起研究、写作、修改。内容定稿后，再生成能直接交付的文件。</p>
               <div className="hero-actions">
-                <a className="button button-dark" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={16} /> 下载 Sumi</a>
+                <a className="button button-dark" href={downloadUrl} aria-describedby="hero-install-note"><Download size={18} /> 下载 Sumi</a>
                 <a className="text-link" href="#workflow">看看 Sumi 怎么工作 <ArrowDown size={15} /></a>
               </div>
+              <p className="hero-install-note" id="hero-install-note">
+                未签名版本，首次打开需手动允许。
+                <a href="#install-guide">查看安装步骤 <ArrowRight size={13} /></a>
+              </p>
               <ul className="hero-facts" aria-label="Sumi 核心特性">
                 <li>模型由你选择</li>
                 <li>每一步看得见</li>
@@ -381,29 +396,6 @@ function App() {
           </div>
         </section>
 
-        <section className="quick-start-section" aria-labelledby="quick-start-title">
-          <div className="shell quick-start-layout">
-            <div className="quick-start-copy">
-              <p className="eyebrow">通用问答与通用应用</p>
-              <h2 id="quick-start-title"><span>常用工具，</span><span>通用问答，</span><span className="quick-start-accent">打开就问。</span></h2>
-              <p>日常问题，直接问 Ask sumi。整理文件、清理系统这类常见任务，也可以从首页应用一步开始。</p>
-              <ul>
-                <li><MessageCircle size={16} /><span><strong>Ask sumi</strong> 随时回答问题，也能调用工具帮你处理事情。</span></li>
-                <li><Blocks size={16} /><span><strong>通用应用</strong> 把常见任务准备好，打开就能用。</span></li>
-              </ul>
-            </div>
-            <AskHomePreview />
-          </div>
-        </section>
-
-        <section className="statement-section">
-          <div className="shell statement-inner">
-            <p className="eyebrow">答案，只是开始</p>
-            <h2>问完了，<br />接着把事做完。</h2>
-            <p>Sumi 会规划任务、读取资料、调用工具，也会在需要你判断时停下来。进度看得见，结果由你确认。</p>
-          </div>
-        </section>
-
         <section className="workflow-section" id="workflow" aria-labelledby="workflow-title">
           <div className="shell">
             <header className="section-head">
@@ -420,6 +412,14 @@ function App() {
                 </li>
               ))}
             </ol>
+          </div>
+        </section>
+
+        <section className="statement-section">
+          <div className="shell statement-inner">
+            <p className="eyebrow">答案，只是开始</p>
+            <h2>问完了，<br />接着把事做完。</h2>
+            <p>Sumi 会规划任务、读取资料、调用工具，也会在需要你判断时停下来。进度看得见，结果由你确认。</p>
           </div>
         </section>
 
@@ -447,6 +447,21 @@ function App() {
               </ul>
             </div>
             <EditCarousel />
+          </div>
+        </section>
+
+        <section className="quick-start-section" aria-labelledby="quick-start-title">
+          <div className="shell quick-start-layout">
+            <div className="quick-start-copy">
+              <p className="eyebrow">通用问答与通用应用</p>
+              <h2 id="quick-start-title"><span>常用工具，</span><span>通用问答，</span><span className="quick-start-accent">打开就问。</span></h2>
+              <p>日常问题，直接问 Ask sumi。整理文件、清理系统这类常见任务，也可以从首页应用一步开始。</p>
+              <ul>
+                <li><MessageCircle size={16} /><span><strong>Ask sumi</strong> 随时回答问题，也能调用工具帮你处理事情。</span></li>
+                <li><Blocks size={16} /><span><strong>通用应用</strong> 把常见任务准备好，打开就能用。</span></li>
+              </ul>
+            </div>
+            <AskHomePreview />
           </div>
         </section>
 
@@ -590,13 +605,54 @@ function App() {
         <section className="install-section" id="install" aria-labelledby="install-title">
           <div className="shell install-layout">
             <div>
-              <p className="eyebrow">SUMI 1.10 · APPLE SILICON</p>
+              <p className="eyebrow">SUMI 1.10.0 · APPLE SILICON</p>
               <h2 id="install-title">下一项工作，<br /><span>从 Sumi 开始。</span></h2>
             </div>
             <div className="install-copy">
-              <p>前往 GitHub Releases 下载 macOS 版。当前版本适用于 Apple Silicon Mac。</p>
-              <a className="button button-light" href={releaseUrl} target="_blank" rel="noreferrer"><Download size={17} /> 下载 Sumi</a>
-              <small>若系统提示无法验证开发者，请在“系统设置 → 隐私与安全”中仅为 Sumi 单独放行，无需关闭 Gatekeeper。</small>
+              <p>适用于 Apple Silicon（M 系列芯片）Mac。点击即下载 DMG 安装包。</p>
+              <a className="button button-light" href={downloadUrl} aria-describedby="unsigned-notice"><Download size={17} /> 下载 Sumi</a>
+              <a className="release-notes-link" href={releaseUrl} target="_blank" rel="noreferrer">版本说明与备用下载 <ArrowRight size={14} /></a>
+            </div>
+            <div className="install-guide" id="install-guide" aria-labelledby="install-guide-title">
+              <header className="install-guide-heading">
+                <p className="eyebrow">首次安装 · 跟着这四步走</p>
+                <h3 id="install-guide-title"><span>下载之后，</span><span>如何打开 Sumi？</span></h3>
+                <p id="unsigned-notice">当前版本未进行 Developer ID 签名及 Apple 公证，macOS 可能会拦截首次打开。确认安装包来自本页链接的官方 GitHub Release 后，按以下步骤仅为 Sumi 允许打开。</p>
+              </header>
+              <ol className="install-steps">
+                <li>
+                  <span aria-hidden="true">01</span>
+                  <h4>拖入「应用程序」</h4>
+                  <p>打开下载好的 <code>sumi-1.10.0-arm64.dmg</code>，将 Sumi 图标拖到 Applications（应用程序）文件夹，等待复制完成。</p>
+                </li>
+                <li>
+                  <span aria-hidden="true">02</span>
+                  <h4>先尝试打开一次</h4>
+                  <p>在访达的「应用程序」中双击 Sumi。若提示「无法验证开发者」或「Apple 无法检查是否包含恶意软件」，先点「完成」或「取消」。</p>
+                </li>
+                <li>
+                  <span aria-hidden="true">03</span>
+                  <h4>在系统设置中允许</h4>
+                  <p>打开「系统设置 → 隐私与安全性」，向下找到「安全性」。在 Sumi 被阻止的提示旁，点击「仍要打开」。</p>
+                </li>
+                <li>
+                  <span aria-hidden="true">04</span>
+                  <h4>确认打开 Sumi</h4>
+                  <p>按系统要求使用密码或 Touch ID 验证，再点击「打开」。此后通常可以从「应用程序」直接启动 Sumi。</p>
+                </li>
+              </ol>
+              <p className="install-safety"><ShieldCheck size={17} /> 无需关闭 Gatekeeper，也无需执行终端命令。</p>
+              <div className="install-help">
+                <details>
+                  <summary>找不到「仍要打开」？</summary>
+                  <p>先从「应用程序」再次尝试打开 Sumi，再回到「隐私与安全性」查看。公司管理的 Mac 可能限制这一操作，需要联系管理员。</p>
+                </details>
+                <details>
+                  <summary>提示「已损坏」或「将损坏你的电脑」？</summary>
+                  <p>这类提示不能直接当作未签名提醒处理。请停止打开，从官方 Release 重新下载；若仍然出现，请联系 Sumi 反馈具体提示。</p>
+                </details>
+              </div>
+              <a className="apple-install-link" href="https://support.apple.com/zh-cn/102445" target="_blank" rel="noreferrer">Apple 官方：打开未签名或未公证的 App <ArrowRight size={14} /></a>
             </div>
           </div>
         </section>
